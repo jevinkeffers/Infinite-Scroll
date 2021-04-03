@@ -23,6 +23,7 @@ function displayPhotos() {
             target: '_blank',
         });
         // Create <img> for photo
+        const img = document.createElement('img');
         setAttributes(img, {
             src: photo.urls.regular,
             alt: photo.alt_description,
@@ -37,7 +38,7 @@ function displayPhotos() {
 // Unsplash API
 
 const count = 10;
-const apiKey ='9krhmT3tWDJRsfCtiEpk-EMkZT57KIfx834_ZCHs0N0';
+const apiKey ='Hh0V_5tpGoJ2hX3dgpmS6_z7pvm2dkAVZhv--Btq6N4';
 const apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 
 // Get photos from Unsplash API
@@ -51,6 +52,14 @@ async function getPhotos() {
         // Catch Error 
     }
 }
+
+// Check to see if scrolling near bottom of page, Load More Photos
+
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+        getPhotos();
+    }
+})
 
 
 // On Load
