@@ -1,10 +1,12 @@
 const imageContainer = document.getElementById('image-container');
 const loader = document.getElementById('loader');
 
+let ready = false;
+let imagesLoaded= 0;
+let totalImaes = 0;
 let photosArray = [];
 
 // Helper Function to Set Attributes on DOM Elements
-
 function setAttributes(element, attributes) {
     for (const key in attributes) {
         element.setAttribute(key, attributes[key]);
@@ -12,8 +14,10 @@ function setAttributes(element, attributes) {
 }
 
 // Create Elements for Links and Photos, Add to DOM
-
 function displayPhotos() {
+    imagesLoaded = 0;
+    totalImages = photosArray.length;
+    console.log('total images', totalImages);
     // Run function for each object in photosArray
     photosArray.forEach((photo) => {
         // Create <a> to link to Unsplash
@@ -29,6 +33,8 @@ function displayPhotos() {
             alt: photo.alt_description,
             title: photo.alt_description,
         });
+        //Event Listener, check when each is finished loading
+        img.addEventListener('load', imageLoaded);
         // Put <img> inside <a>, then put both inside imageContainer Element
         item.appendChild(img);
         imageContainer.appendChild(item);
@@ -36,13 +42,21 @@ function displayPhotos() {
 }
 
 // Unsplash API
-
-const count = 10;
-const apiKey ='Hh0V_5tpGoJ2hX3dgpmS6_z7pvm2dkAVZhv--Btq6N4';
+const count = 30;
+const apiKey ='Nnk1sfGA3GgYAbgLLHp--VWPzLSwgjquURgz3ettiEE';
 const apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 
-// Get photos from Unsplash API
+// Check if all images were loaded
+function imageLoaded() {
+    imagesLoaded++;
+    console.log(imagesLoaded);
+    if (imagesLoaded === totalImages) {
+        ready = true;
+        console.log('ready =' , ready);
+    }
+}
 
+// Get photos from Unsplash API
 async function getPhotos() {
     try {
         const response = await fetch(apiUrl);
@@ -54,14 +68,12 @@ async function getPhotos() {
 }
 
 // Check to see if scrolling near bottom of page, Load More Photos
-
 window.addEventListener('scroll', () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 && ready) {
+        ready = false;
         getPhotos();
     }
 })
 
-
 // On Load
-
 getPhotos();
